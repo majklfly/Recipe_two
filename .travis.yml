@@ -10,6 +10,7 @@ env:
 
 install:
   - pip install -r requirements.txt
+  - pip install psycopg2
 
 
 before_script:
