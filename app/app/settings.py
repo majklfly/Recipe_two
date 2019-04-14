@@ -41,11 +41,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'core',
     'user',
+    'recipe',
 ]
-
-DEFAULT_AUTHENTICATION_CLASSES = (
-    'rest_framework.authentication.SessionAuthentication',
-)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
