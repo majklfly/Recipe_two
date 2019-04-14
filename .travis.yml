@@ -10,9 +10,11 @@ env:
 
 install:
   - pip install -r requirements.txt
+  - pip install psycopg2
+  
 
 before_script:
   - cd app
 
 script:
-  - python manage.py test
+  - python manage.py test && flake8
