@@ -10,11 +10,14 @@ env:
 
 install:
   - pip install -r requirements.txt
+  - pip install psycopg2
 
 
 before_script:
   - psql -c 'create database database1;' -U postgres
   - cd app
   - python manage.py wait_for_db
+  - python manage.py migrate
+
 script:
   - python manage.py test && flake8
