@@ -7,7 +7,7 @@ from rest_framework.test import APIClient
 
 from core.models import Recipe, Tag, Ingredient
 
-from recipe.serializers import RecipeSerializer, RecipeDetailSerializer
+from recipe.serializers import RecipeSerializer
 
 
 RECIPES_URL = reverse('recipe:recipe-list')
@@ -23,6 +23,7 @@ def sample_recipe(user, **params):
     defaults.update(params)
 
     return Recipe.objects.create(user=user, **defaults)
+
 
 def detail_url(recipe_id):
     """Return recipe detail URL"""
@@ -92,31 +93,20 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
         self.assertEqual(len(res.data), 1)
 
-    def test_view_recipe_detail(self):
-        """Test viewing a recipe detail"""
-        recipe = sample_recipe(user=self.user)
-        recipe.tags.add(sample_tag(user=self.user))
-        recipe.ingredients.add(sample_ingredient(user=self.user))
 
-        url = detail_url(recipe.id)
-        res = self.client.get(url)
+def test_create_basic_recipe(self):
+    """Test creating recipe"""
+    payload = {
+        'title': 'Test recipe',
+        'time_minutes': 30,
+        'price': 10.00,
+    }
+    res = self.client.post(RECIPES_URL, payload)
 
-        serializer = RecipeDetailSerializer(recipe)
-        self.assertEqual(res.data, serializer.data)
-
-    def test_create_basic_recipe(self):
-        """Test creating recipe"""
-        payload = {
-            'title': 'Test recipe',
-            'time_minutes': 30,
-            'price': 10.00,
-        }
-        res = self.client.post(RECIPES_URL, payload)
-
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-        recipe = Recipe.objects.get(id=res.data['id'])
-        for key in payload.keys():
-            self.assertEqual(payload[key], getattr(recipe, key))
+    self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+    recipe = Recipe.objects.get(id=res.data['id'])
+    for key in payload.keys():
+        self.assertEqual(payload[key], getattr(recipe, key))
 
     def test_create_recipe_with_tags(self):
         """Test creating a recipe with tags"""
