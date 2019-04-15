@@ -14,9 +14,10 @@ install:
 
 
 before_script:
-  - psql -c 'create database database1;' -U postgres
+  - psql -c 'CREATE DATABASE database1;' -U postgres
+   - psql -c "CREATE USER postgres2 WITH PASSWORD '12345';" -U postgres
   - cd app
-  - python manage.py wait_for_db
+  # - python manage.py wait_for_db
 
 script:
   - python manage.py test && flake8
